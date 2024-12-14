@@ -111,3 +111,16 @@ To create a file system on the partition type the following command for every pa
 Now for mounting the partitions, create the mount point with these commands;
 
     mount -v -t ext4 /dev/sdx2 /mnt
+    mkdir /mnt/home
+    mkdir /mnt/boot
+    mount -v -t ext4 /dev/sdx1 /mnt/boot
+    mount -v -t ext3 /dev/sdx3 /mnt/home
+
+# Installing packages
+
+To create this directory, execute the following command, as user `root`, before starting the download session;
+
+    mkdir -v /mnt/sources
+Make this directory writable and sticky. “Sticky” means that even if multiple users have write permission on a directory, only the owner of a file can delete the file within a sticky directory. The following command will enable the write and sticky modes:
+
+    chmod -v a+wt /mnt/sources
