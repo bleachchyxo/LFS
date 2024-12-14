@@ -127,4 +127,6 @@ Make this directory writable and sticky. “Sticky” means that even if multipl
 
 To download all of the packages and patches by using [wget-list](https://www.linuxfromscratch.org/lfs/view/development/wget-list) as an input to the wget command, use: 
 
+    wget --input-file=wget-list --continue --directory-prefix=/mnt/sources
+
 Additionally, starting with `LFS-7.0`, there is a separate file, [md5sums](http://www.linuxfromscratch.org/lfs/view/stable/md5sums), which can be used to verify that all the correct packages are available before proceeding. Place that file in $LFS/sources and run:
