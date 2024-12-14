@@ -130,3 +130,33 @@ To download all of the packages and patches by using [wget-list](https://www.lin
     wget --input-file=wget-list --continue --directory-prefix=/mnt/sources
 
 Additionally, starting with `LFS-7.0`, there is a separate file, [md5sums](http://www.linuxfromscratch.org/lfs/view/stable/md5sums), which can be used to verify that all the correct packages are available before proceeding. Place that file in $LFS/sources and run:
+
+    pushd /mnt/sources
+      md5sum -c md5sums
+    popd
+
+- For some reason some packages get failed (maybe removing this step in the future)
+
+## Creating a limited directory layout in the LFS Filesystem
+
+Create the required directory layout by issuing the following commands as `root`;
+
+    mkdir -pv /mnt/{etc,var} /mnt/usr/{bin,lib,sbin}
+
+    for i in bin lib sbin; do
+      ln -sv usr/$i /mnt/$i
+    done
+
+    case $(uname -m) in
+      x86_64) mkdir -pv /mnt/lib64 ;;
+    esac
+
+Also;
+
+    mkdir -pv /mnt/usr/lib{,x}32
+    ln -sv usr/lib32 /mnt/lib32
+    ln -sv usr/libx32 /mnt/libx32
+
+Still acting as `root`, create that directory with this command:
+
+    mkdir -pv /mnt/tools
