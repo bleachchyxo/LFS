@@ -124,3 +124,7 @@ To create this directory, execute the following command, as user `root`, before 
 Make this directory writable and sticky. “Sticky” means that even if multiple users have write permission on a directory, only the owner of a file can delete the file within a sticky directory. The following command will enable the write and sticky modes:
 
     chmod -v a+wt /mnt/sources
+
+To download all of the packages and patches by using [wget-list](https://www.linuxfromscratch.org/lfs/view/development/wget-list) as an input to the wget command, use: 
+
+Additionally, starting with `LFS-7.0`, there is a separate file, [md5sums](http://www.linuxfromscratch.org/lfs/view/stable/md5sums), which can be used to verify that all the correct packages are available before proceeding. Place that file in $LFS/sources and run:
