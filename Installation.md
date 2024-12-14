@@ -160,3 +160,35 @@ Also;
 Still acting as `root`, create that directory with this command:
 
     mkdir -pv /mnt/tools
+
+## Adding a user to LFS
+
+When logged in as `root`, making a single mistake can damage or destroy a system. Therefore, the packages in the next two chapters are built as an unprivileged user. You could use your own user name. We will create a new user called `user01` as a member of a new group (named `lfs`) and run commands as `lfs` during the installation process. As `root`, issue the following commands to add the new user:
+
+    groupadd lfs
+    useradd -s /bin/bash -g lfs -m -k /dev/null user01
+
+
+
+### This is what the command line options mean:
+
+- `s /bin/bash`
+
+This makes bash the default shell for user lfs.
+
+- `g lfs`
+
+This option adds user lfs to group lfs.
+
+- `m`
+
+This creates a home directory for lfs.
+
+- `k /dev/null`
+
+This parameter prevents possible copying of files from a skeleton directory (the default is /etc/skel) by changing the input location to the special null device.
+
+- `user01`
+
+This is the name of the new user.
+
