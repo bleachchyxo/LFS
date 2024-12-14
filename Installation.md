@@ -99,3 +99,15 @@ Now copy and paste the following script in the terminal
     fi
     EOF
     bash version-check.sh
+
+## Creating the partitions
+
+3 partitions, same shi as artix
+
+To create a file system on the partition type the following command for every partition you created;
+
+    mkfs -v -t ext4 /dev/sdx
+
+Now for mounting the partitions, create the mount point with these commands;
+
+    mount -v -t ext4 /dev/sdx2 /mnt
