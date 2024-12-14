@@ -265,3 +265,70 @@ And copy paste the following script;
 Continue with compiling the package;
 
     time make
+
+Install the package;
+
+    make install
+
+And you can remove the directory
+
+    rm -fr binutils-2.43.1/
+
+## GCC
+
+    tar -xvf gcc-14.2.0.tar.xz
+    cd gcc-14.2.0/
+
+run one by one;
+
+    tar -xf ../mpfr-4.2.0.tar.xz
+    mv -v mpfr-4.2.0 mpfr
+    tar -xf ../gmp-6.3.0.tar.xz
+    mv -v gmp-6.3.0 gmp
+    tar -xf ../mpc-1.3.1.tar.gz
+    mv -v mpc-1.3.1 mpc
+
+On x86_64 hosts, set the default directory name for `64-bit` libraries to “`lib`”;
+
+    case $(uname -m) in
+        x86_64)
+            sed -e '/m64=/s/lib64/lib/' \
+            -i.orig gcc/config/i386/t-linux64
+        ;;
+    esac
+
+The GCC documentation recommends building GCC in a dedicated build directory;
+
+    mkdir -v build
+    cd build
+
+Prepare GCC for compilation:
+
+    ../configure \
+    --target=$LFS_TGT \
+    --prefix=/mnt/tools \
+    --with-glibc-version=2.38 \
+    --with-sysroot=/mnt \
+    --with-newlib \
+    --without-headers \
+    --enable-default-pie \
+    --enable-default-ssp \
+    --disable-nls \
+    --disable-shared \
+    --disable-multilib \
+    --disable-threads \
+    --disable-libatomic \
+    --disable-libgomp \
+    --disable-libquadmath \
+    --disable-libssp \
+    --disable-libvtv \
+    --disable-libstdcxx \
+    --enable-languages=c,c++
+
+Compile GCC by running:
+
+    time make
+
+Install the package:
+
+    make install
