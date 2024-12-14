@@ -192,3 +192,76 @@ This parameter prevents possible copying of files from a skeleton directory (the
 
 This is the name of the new user.
 
+To set a password for `user01` issue the following command as the `root` to set the password;
+
+    passwd user01
+
+Grant `user01` full access to all the directories under `/mnt` by making lfs the owner;
+
+    chown -v user01 /mnt/{usr{,/*},lib,var,etc,bin,sbin,tools}
+    case $(uname -m) in
+      x86_64) chown -v user01 /mnt/lib64 ;;
+    esac
+
+Next, start a shell running as `lfs user`. This can be done by logging in as `user01` on a virtual console, or with the following substitute/switch user command:
+
+    su - user01
+
+## Setting up the enviroment
+
+Set up a good working environment by creating two new startup files for the bash shell. While logged in as `lfs user`, issue the following command to create a new `.bash_profile`:
+
+    cat > ~/.bash_profile << "EOF"
+    exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
+    EOF
+
+The new instance of the shell is a non-login shell, which does not read, and execute, the contents of the `/etc/profil`e or `.bash_profile` files, but rather reads, and executes, the `.bashrc` file instead. Create the `.bashrc` file now: 
+
+    cat > ~/.bashrc << "EOF"
+    set +h
+    umask 022
+    LC_ALL=POSIX
+    LFS_TGT=x86_64-lfs-linux-gnu
+    LFS_TGT32=i686-lfs-linux-gnu
+    LFS_TGTX32=x86_64-lfs-linux-gnux32
+    PATH=/usr/bin
+    if [ ! -L /bin ]; then PATH=/bin:$PATH; fi
+    PATH=/mnt/tools/bin:$PATH
+    CONFIG_SITE=/mnt/usr/share/config.site
+    export LC_ALL LFS_TGT PATH
+    EOF
+
+Then enter:
+
+    [ ! -e /etc/bash.bashrc ] || mv -v /etc/bash.bashrc /etc/bash.bashrc.NOUSE
+
+### About SBUs
+
+For compiling in `LFS` (or any large source build), the general rule of thumb is to use 2x the number of logical cores for maximum parallelism. So, if you have 8 logical cores, you would typically set the number of jobs to 16 (i.e., `-j16`).
+
+    export MAKEFLAGS='-jx'
+
+or by building with:
+
+    make -jx
+
+### Binutils
+
+    cd /mnt/sources/
+    tar -xvf binutils-2.43.1.tar.xz
+    cd binutils-2.43.1/
+    mkdir -v build
+    cd build/
+
+And copy paste the following script;
+
+    ../configure --prefix=/mnt/tools \
+    --with-sysroot=/mnt \
+    --target=$LFS_TGT \
+    --disable-nls \
+    --enable-gprofng=no \
+    --disable-werror
+    
+Continue with compiling the package;
+
+    time make
